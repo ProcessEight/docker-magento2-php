@@ -39,7 +39,7 @@ else
 fi
 
 echo "Running Magento 2 setup script..."
-/usr/local/bin/php ./bin/magento setup:install \
+M2_INSTALL_COMMAND = setup:install \
   --db-host=$M2SETUP_DB_HOST \
   --db-name=$M2SETUP_DB_NAME \
   --db-user=$M2SETUP_DB_USER \
@@ -50,9 +50,11 @@ echo "Running Magento 2 setup script..."
   --admin-email=$M2SETUP_ADMIN_EMAIL \
   --admin-user=$M2SETUP_ADMIN_USER \
   --admin-password=$M2SETUP_ADMIN_PASSWORD \
+  --backend-frontname=$M2SETUP_ADMIN_URI \
   --language=$M2SETUP_LANGUAGE \
   --currency=$M2SETUP_CURRENCY \
   --timezone=$M2SETUP_TIMEZONE \
   $M2SETUP_USE_SAMPLE_DATA_STRING
 
+/usr/local/bin/php ./bin/magento $M2_INSTALL_COMMAND
 echo "The setup script has completed execution."

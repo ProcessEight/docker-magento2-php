@@ -29,13 +29,13 @@ RUN docker-php-ext-install \
 RUN curl -sS https://getcomposer.org/installer | \
   php -- --install-dir=/usr/local/bin --filename=composer
 
-ENV PHP_MEMORY_LIMIT 2G
+ENV PHP_MEMORY_LIMIT 8G
 ENV PHP_PORT 9000
 ENV PHP_PM dynamic
-ENV PHP_PM_MAX_CHILDREN 10
-ENV PHP_PM_START_SERVERS 4
-ENV PHP_PM_MIN_SPARE_SERVERS 2
-ENV PHP_PM_MAX_SPARE_SERVERS 6
+ENV PHP_PM_MAX_CHILDREN 20
+ENV PHP_PM_START_SERVERS 8
+ENV PHP_PM_MIN_SPARE_SERVERS 4
+ENV PHP_PM_MAX_SPARE_SERVERS 12
 ENV APP_MAGE_MODE developer
 
 COPY conf/www.conf /usr/local/etc/php-fpm.d/
