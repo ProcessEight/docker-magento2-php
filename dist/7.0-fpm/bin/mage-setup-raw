@@ -1,51 +1,46 @@
 #!/bin/sh
-echo "Initializing setup..."
+echo "Installing Magento 2..."
 
 cd /var/www/html
 
 if [ -f ./app/etc/config.php ] || [ -f ./app/etc/env.php ]; then
-    echo "It appears Magento is already installed (app/etc/config.php or app/etc/env.php exist). Exiting setup..."
+    echo "Magento 2 is already installed"
     exit
 fi
 
-if [ "$M2SETUP_USE_COMPOSER_ENTERPRISE" = true ]; then
-    /usr/local/bin/php /usr/local/bin/composer create-project --repository-url=https://repo.magento.com/ magento/project-enterprise-edition=$M2SETUP_VERSION .
+if [ "$MAGENTO2_ENV_EDITION" = "enterprise" ]; then
+    /usr/local/bin/php /usr/local/bin/composer create-project --repository-url=https://repo.magento.com/ magento/project-enterprise-edition=$MAGENTO2_ENV_VERSION .
 else
-    /usr/local/bin/php /usr/local/bin/composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition=$M2SETUP_VERSION .
+    /usr/local/bin/php /usr/local/bin/composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition=$MAGENTO2_ENV_VERSION .
 fi
 ln -s /var/www/.composer ./var/composer_home
 
 chmod +x ./bin/magento
 
-if [ "$M2SETUP_USE_SAMPLE_DATA" = true ]; then
-    echo "Installing composer dependencies..."
+if [ "$MAGENTO2_USE_SAMPLE_DATA" = true ]; then
     /usr/local/bin/php /usr/local/bin/composer update
-    echo "Installing sample data..."
     /usr/local/bin/php ./bin/magento sampledata:deploy
-
-    M2SETUP_USE_SAMPLE_DATA_STRING="--use-sample-data"
+    MAGENTO2_USE_SAMPLE_DATA_STRING="--use-sample-data"
 else
-    M2SETUP_USE_SAMPLE_DATA_STRING=""
+    MAGENTO2_USE_SAMPLE_DATA_STRING=""
 fi
 
-echo "Running Magento 2 setup script..."
+echo "Running Magento 2 setup command..."
 M2_INSTALL_COMMAND="setup:install \
-    --db-host=$M2SETUP_DB_HOST \
-    --db-name=$M2SETUP_DB_NAME \
-    --db-user=$M2SETUP_DB_USER \
-    --db-password=$M2SETUP_DB_PASSWORD \
-    --base-url=$M2SETUP_BASE_URL \
-    --admin-firstname=$M2SETUP_ADMIN_FIRSTNAME \
-    --admin-lastname=$M2SETUP_ADMIN_LASTNAME \
-    --admin-email=$M2SETUP_ADMIN_EMAIL \
-    --admin-user=$M2SETUP_ADMIN_USER \
-    --admin-password=$M2SETUP_ADMIN_PASSWORD \
-    --backend-frontname=$M2SETUP_ADMIN_URI \
-    --language=$M2SETUP_LANGUAGE \
-    --currency=$M2SETUP_CURRENCY \
-    --timezone=$M2SETUP_TIMEZONE \
-    $M2SETUP_USE_SAMPLE_DATA_STRING"
+    --db-host=$MAGENTO2_DB_HOST \
+    --db-name=$MAGENTO2_DB_NAME \
+    --db-user=$MAGENTO2_DB_USER \
+    --db-password=$MAGENTO2_DB_PASSWORD \
+    --base-url=$MAGENTO2_BASE_URL \
+    --admin-firstname=$MAGENTO2_ADMIN_FIRSTNAME \
+    --admin-lastname=$MAGENTO2_ADMIN_LASTNAME \
+    --admin-email=$MAGENTO2_ADMIN_EMAIL \
+    --admin-user=$MAGENTO2_ADMIN_USER \
+    --admin-password=$MAGENTO2_ADMIN_PASSWORD \
+    --backend-frontname=$MAGENTO2_ADMIN_URI \
+    --language=$MAGENTO2_LANGUAGE \
+    --currency=$MAGENTO2_CURRENCY \
+    --timezone=$MAGENTO2_TIMEZONE \
+    $MAGENTO2_USE_SAMPLE_DATA_STRING"
 
 /usr/local/bin/php ./bin/magento $M2_INSTALL_COMMAND
-
-echo "The setup script has completed execution."

@@ -25,13 +25,13 @@ This image also installs the following PHP extensions, which are the minimally r
 
 The following variables may be set to control the PHP environment:
 
-- `PHP_MEMORY_LIMIT`: (default `2048M`) Set the memory_limit of php.ini
+- `PHP_MEMORY_LIMIT`: (default `16G`) Set the memory_limit of php.ini
 - `PHP_PORT`: (default: `9000`) Set a custom PHP port
 - `PHP_PM`: (default `dynamic`) Set the process manager
-- `PHP_PM_MAX_CHILDREN`: (default: `10`) Set the max number of children processes
-- `PHP_PM_START_SERVERS`: (default: `4`) Set the default number of servers to start at runtime
-- `PHP_PM_MIN_SPARE_SERVERS`: (default `2`) Set the minumum number of spare servers
-- `PHP_PM_MAX_SPARE_SERVERS`: (default: `6`) Set the maximum number of spare servers
+- `PHP_PM_MAX_CHILDREN`: (default: `20`) Set the max number of children processes
+- `PHP_PM_START_SERVERS`: (default: `8`) Set the default number of servers to start at runtime
+- `PHP_PM_MIN_SPARE_SERVERS`: (default `4`) Set the minumum number of spare servers
+- `PHP_PM_MAX_SPARE_SERVERS`: (default: `12`) Set the maximum number of spare servers
 - `APP_MAGE_MODE`: (default: `developer`) Set the MAGE_MODE
 
 ## Building it
@@ -42,8 +42,8 @@ Run the `build` command to build the image:
 $ docker build -f dist/7.0-fpm/Dockerfile -t projecteight/php7.0-fpm:0.3.0 -t projecteight/php7.0-fpm:latest ./dist/7.0-fpm/
 $ docker images
 REPOSITORY                   TAG                 IMAGE ID            CREATED             SIZE
-projecteight/php7.0-fpm      0.3.0               d449940aa399        About an hour ago   183 MB
-projecteight/php7.0-fpm      latest              d449940aa399        About an hour ago   183 MB
+projecteight/php7.0-fpm      0.3.0               166bdd0cbc92        About an hour ago   183 MB
+projecteight/php7.0-fpm      latest              166bdd0cbc92        About an hour ago   183 MB
 ...
 ```
 
