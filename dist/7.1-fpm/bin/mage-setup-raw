@@ -8,10 +8,10 @@ if [ -f ./app/etc/config.php ] || [ -f ./app/etc/env.php ]; then
     exit
 fi
 
-if [ "$MAGENTO2_USE_COMPOSER_ENTERPRISE" = "enterprise" ]; then
-    /usr/local/bin/php /usr/local/bin/composer create-project --repository-url=https://repo.magento.com/ magento/project-enterprise-edition=$MAGENTO2_VERSION .
+if [ "$MAGENTO2_ENV_EDITION" = "enterprise" ]; then
+    /usr/local/bin/php /usr/local/bin/composer create-project --repository-url=https://repo.magento.com/ magento/project-enterprise-edition=$MAGENTO2_ENV_VERSION .
 else
-    /usr/local/bin/php /usr/local/bin/composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition=$MAGENTO2_VERSION .
+    /usr/local/bin/php /usr/local/bin/composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition=$MAGENTO2_ENV_VERSION .
 fi
 ln -s /var/www/.composer ./var/composer_home
 
@@ -27,9 +27,9 @@ fi
 
 echo "Running Magento 2 setup command..."
 M2_INSTALL_COMMAND="setup:install \
-    --db-host=$MAGENTO2_DB_HOST \
+    --db-host=$MAGENTO2_DB_HOSTNAME \
     --db-name=$MAGENTO2_DB_NAME \
-    --db-user=$MAGENTO2_DB_USER \
+    --db-user=$MAGENTO2_DB_USERNAME \
     --db-password=$MAGENTO2_DB_PASSWORD \
     --base-url=$MAGENTO2_BASE_URL \
     --admin-firstname=$MAGENTO2_ADMIN_FIRSTNAME \

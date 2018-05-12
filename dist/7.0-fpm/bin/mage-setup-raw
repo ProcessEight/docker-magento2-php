@@ -27,9 +27,9 @@ fi
 
 echo "Running Magento 2 setup command..."
 M2_INSTALL_COMMAND="setup:install \
-    --db-host=$MAGENTO2_DB_HOST \
+    --db-host=$MAGENTO2_DB_HOSTNAME \
     --db-name=$MAGENTO2_DB_NAME \
-    --db-user=$MAGENTO2_DB_USER \
+    --db-user=$MAGENTO2_DB_USERNAME \
     --db-password=$MAGENTO2_DB_PASSWORD \
     --base-url=$MAGENTO2_BASE_URL \
     --admin-firstname=$MAGENTO2_ADMIN_FIRSTNAME \
