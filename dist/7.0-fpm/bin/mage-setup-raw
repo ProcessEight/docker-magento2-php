@@ -9,17 +9,26 @@ if [ -f ./app/etc/config.php ] || [ -f ./app/etc/env.php ]; then
 fi
 
 if [ "$MAGENTO2_ENV_EDITION" = "enterprise" ]; then
-    /usr/local/bin/php /usr/local/bin/composer create-project --repository-url=https://repo.magento.com/ magento/project-enterprise-edition=$MAGENTO2_ENV_VERSION .
+    /usr/local/bin/php /usr/local/bin/composer create-project --repository-url=https://repo.magento.com/ magento/project-enterprise-edition=$MAGENTO2_ENV_VERSION $MAGENTO2_ENV_WEBROOT
 else
-    /usr/local/bin/php /usr/local/bin/composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition=$MAGENTO2_ENV_VERSION .
+    /usr/local/bin/php /usr/local/bin/composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition=$MAGENTO2_ENV_VERSION $MAGENTO2_ENV_WEBROOT
 fi
 ln -s /var/www/.composer ./var/composer_home
 
+if [ ! -f ./bin/magento ]; then
+echo "
+#
+# Cloning of Magento 2 with Composer failed
+#
+"
+    exit
+fi
+
 chmod +x ./bin/magento
 
-if [ "$MAGENTO2_USE_SAMPLE_DATA" = true ]; then
+if [ "$MAGENTO2_ENV_USESAMPLEDATA" = true ]; then
     /usr/local/bin/php /usr/local/bin/composer update
-    /usr/local/bin/php ./bin/magento sampledata:deploy
+    /usr/local/bin/php -f ./bin/magento sampledata:deploy
     MAGENTO2_USE_SAMPLE_DATA_STRING="--use-sample-data"
 else
     MAGENTO2_USE_SAMPLE_DATA_STRING=""
@@ -31,16 +40,16 @@ M2_INSTALL_COMMAND="setup:install \
     --db-name=$MAGENTO2_DB_NAME \
     --db-user=$MAGENTO2_DB_USERNAME \
     --db-password=$MAGENTO2_DB_PASSWORD \
-    --base-url=$MAGENTO2_BASE_URL \
+    --base-url=$MAGENTO2_ENV_HOSTNAME \
     --admin-firstname=$MAGENTO2_ADMIN_FIRSTNAME \
     --admin-lastname=$MAGENTO2_ADMIN_LASTNAME \
     --admin-email=$MAGENTO2_ADMIN_EMAIL \
-    --admin-user=$MAGENTO2_ADMIN_USER \
+    --admin-user=$MAGENTO2_ADMIN_USERNAME \
     --admin-password=$MAGENTO2_ADMIN_PASSWORD \
-    --backend-frontname=$MAGENTO2_ADMIN_URI \
-    --language=$MAGENTO2_LANGUAGE \
-    --currency=$MAGENTO2_CURRENCY \
-    --timezone=$MAGENTO2_TIMEZONE \
+    --backend-frontname=$MAGENTO2_ADMIN_FRONTNAME \
+    --language=$MAGENTO2_LOCALE_CODE \
+    --currency=$MAGENTO2_LOCALE_CURRENCY \
+    --timezone=$MAGENTO2_LOCALE_TIMEZONE \
     $MAGENTO2_USE_SAMPLE_DATA_STRING"
 
-/usr/local/bin/php ./bin/magento $M2_INSTALL_COMMAND
+/usr/local/bin/php -f ./bin/magento $M2_INSTALL_COMMAND
